@@ -30,11 +30,20 @@ public class Facture {
 
     public void retirerProduit(Produit produit, int quantité) {
         if (produits.containsKey(produit)) {
-            produits.put(produit, produits.get(produit) - quantité);
+            if (produits.get(produit) >= quantité) {
+                produits.put(produit, produits.get(produit) - quantité);
+            }
         } else {
-            System.out.println("Le produit n'existe pas");
+            produits.remove(produit);
         }
+    }
 
+    public boolean produitExistant(Produit produit) {
+        if (produits.containsKey(produit)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public double MontantTotalTTC() {
@@ -58,16 +67,17 @@ public class Facture {
     }
 
     private String toStringProduit() {
+        String res = "";
         for (HashMap.Entry<Produit, Integer> produits : produits.entrySet()) {
-            return produits.getKey() + "\n" + "Quantité : " + produits.getValue();
+            res += produits.getKey() + "\n" + "Quantité : " + produits.getValue() + "\n";
         }
-        return "Probleme dans toStringProduit";
+        return res;
     }
 
     public int getQuantiteTotalProduitConfondue() {
         int quantiteGlobale = 0;
         for (HashMap.Entry<Produit, Integer> key : produits.entrySet()) {
-            quantiteGlobale = +key.getValue();
+            quantiteGlobale += key.getValue();
         }
         return quantiteGlobale;
     }

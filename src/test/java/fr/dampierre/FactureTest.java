@@ -136,7 +136,7 @@ class FactureTest {
 
         // ASSERT
 
-        assertEquals(5, res, "Devrait renvoyer le prix HT");
+        assertEquals(5, res, "Devrait  renvoyer la quantité d'un seul produit ici p2 donc 5");
     }
 
     @Test
@@ -159,7 +159,7 @@ class FactureTest {
 
         // ASSERT
 
-        assertEquals(10, res, "Devrait renvoyer le prix HT");
+        assertEquals(10, res, "Devrait renvoyer la quantité d'un seul produit ici p2 donc 10");
     }
 
     @Test
@@ -182,6 +182,59 @@ class FactureTest {
 
         // ASSERT
 
-        assertEquals(15, res, "Devrait renvoyer le prix HT");
+        assertEquals(15, res, "Devrait renvoyer la quantité globale de tous les produits confondus ici 15");
+    }
+
+    @Test
+    void retirerProduitQuiNExistePas() {
+
+        // Arrange
+        TypeProduit pasDeTVA = new TypeProduit(0.0, " ");
+        Client c = new Client("Geneste", "theogeneste@hotmail.fr", TypeClient.Particulier);
+        Facture f = new Facture(c);
+        Produit p = new Produit(111, "produit2", 200, pasDeTVA);
+        // AGIS
+
+        f.retirerProduit(p, 2);
+        boolean res = f.produitExistant(p);
+
+        // ASSERT
+
+        assertEquals(false, res, "Devrait afficher Le produit n'existe pas");
+    }
+
+    @Test
+    void verifierQueProduitExiste() {
+
+        // Arrange
+        TypeProduit pasDeTVA = new TypeProduit(0.0, " ");
+        Client c = new Client("Geneste", "theogeneste@hotmail.fr", TypeClient.Particulier);
+        Facture f = new Facture(c);
+        Produit p = new Produit(111, "produit2", 200, pasDeTVA);
+        f.ajouterProduit(p, 3);
+        // AGIS
+        boolean res = f.produitExistant(p);
+
+        // ASSERT
+
+        assertEquals(true, res, "Devrait afficher Le produit existe");
+    }
+
+    @Test
+    void retirerProduitSiQuantiteEnleverSuperieur() {
+
+        // Arrange
+        TypeProduit pasDeTVA = new TypeProduit(0.0, " ");
+        Client c = new Client("Geneste", "theogeneste@hotmail.fr", TypeClient.Particulier);
+        Facture f = new Facture(c);
+        Produit p = new Produit(111, "produit2", 200, pasDeTVA);
+        f.ajouterProduit(p, 3);
+        // AGIS
+        f.retirerProduit(p, 5);
+        boolean res = f.produitExistant(p);
+
+        // ASSERT
+
+        assertEquals(false, res, "Devrait afficher Le produit n'existe pas");
     }
 }
